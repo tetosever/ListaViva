@@ -56,3 +56,8 @@ Questa struttura verrà introdotta con la prima vertical slice. I modelli del da
 Implementare, nell'ordine: login → creazione del nucleo → invito → lista → aggiunta e spunta offline → riconnessione di due dispositivi → completamento → storico. Prima di invitare i nuclei alpha, verificare retry idempotenti, conflitti sulle quantità, revoca della membership e isolamento dei dati tra due nuclei.
 
 La [roadmap](docs/ROADMAP.md) indica obiettivi e soglie di validazione. Le durate sono stime part time, non date di consegna impegnative.
+
+
+## Sviluppo con sub-agent
+
+Il [sistema multi-agent](agents/README.md) definisce PM, orchestratore e specialisti, con skills del repository, backlog M1–M6 e workflow issue → branch → PR. Ogni task viene revisionato da tetosever e il merge resta manuale. La configurazione di progetto è in `.codex/`; i comandi di verifica e avvio sono nella guida.
