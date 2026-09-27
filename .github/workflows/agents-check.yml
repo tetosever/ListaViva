@@ -1,0 +1,28 @@
+name: Agents checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 agents/scripts/validate.py
+      - run: python3 -m unittest discover -s agents/tests -v
+      - run: python3 agents/scripts/pm_sync.py
+      - name: Check issue and branch contract
+        if: github.event_name == 'pull_request'
+        run: python3 agents/scripts/pr_contract.py

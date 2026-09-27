@@ -1,0 +1,1594 @@
+{
+  "schema_version": 1,
+  "milestones": [
+    {
+      "id": "M1",
+      "title": "Lista condivisa",
+      "objective": "Consentire spese condivise affidabili anche offline.",
+      "release": "Alpha 0.1",
+      "gate": "Release subordinata a PR approvate dall’utente e unite; prove su due dispositivi senza perdita/duplicazione e isolamento household; osservazione di 10–20 nuclei con esito documentato. La raccolta longitudinale non è inclusa nelle giornate tecniche stimate.",
+      "tasks": [
+        {
+          "id": "M1-01",
+          "milestone": "M1",
+          "title": "Definire flussi alpha e criteri di osservazione",
+          "kind": "validation",
+          "story": "Come product owner voglio validare i flussi principali prima dello sviluppo per contenere lo scope.",
+          "scope": [
+            "Prototipo onboarding, lista e check",
+            "Protocollo interviste e alpha",
+            "Mappa requisiti PRD e metriche"
+          ],
+          "out_of_scope": [
+            "Reclutamento automatico o contatti senza autorizzazione",
+            "Dichiarare completata la validazione senza dati"
+          ],
+          "acceptance": [
+            "Quattro flussi sono descritti con stati vuoti/errori",
+            "Protocollo definisce campione, misure e durata",
+            "Ipotesi e risultati osservati sono distinti"
+          ],
+          "dependencies": [],
+          "owner": "pm",
+          "priority": "P1",
+          "estimate_days": 2
+        },
+        {
+          "id": "M1-02",
+          "milestone": "M1",
+          "title": "Inizializzare workspace e CI",
+          "kind": "technical",
+          "story": "Come sviluppatore voglio comandi riproducibili per verificare ogni PR.",
+          "scope": [
+            "Workspace mobile/API/contracts",
+            "Lockfile, lint, typecheck e build minima",
+            "CI per pull request e esempio configurazione"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Un checkout pulito esegue i comandi documentati",
+            "Una violazione di tipo fallisce in CI",
+            "Nessun segreto è versionato"
+          ],
+          "dependencies": [],
+          "owner": "orchestrator",
+          "priority": "P0",
+          "estimate_days": 2
+        },
+        {
+          "id": "M1-03",
+          "milestone": "M1",
+          "title": "Definire contratti e schema base",
+          "kind": "technical",
+          "story": "Come sviluppatore voglio identità, revisioni e relazioni coerenti tra client e server.",
+          "scope": [
+            "Contratti versionati household/liste/item/comandi",
+            "Migrazioni iniziali e vincoli tenant",
+            "Decisione su completamento, undo e retention deduplica"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Migrazioni applicabili su database vuoto",
+            "Contratti rifiutano payload invalidi",
+            "Documento descrive conflitti, tombstone e unità compatibili"
+          ],
+          "dependencies": [
+            "M1-02"
+          ],
+          "owner": "data-sync",
+          "priority": "P0",
+          "estimate_days": 3
+        },
+        {
+          "id": "M1-04",
+          "milestone": "M1",
+          "title": "Implementare login e recupero credenziali",
+          "kind": "user-story",
+          "story": "Come utente voglio accedere e recuperare le credenziali per ritrovare il mio nucleo.",
+          "scope": [
+            "Sessione provider identità e validazione API",
+            "Schermata login e recupero",
+            "Token in storage sicuro"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Token assente o invalido riceve rifiuto",
+            "Login valido raggiunge onboarding",
+            "Recupero credenziali ha esito neutro e gestisce errori"
+          ],
+          "dependencies": [
+            "M1-02",
+            "M1-03"
+          ],
+          "owner": "backend",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M1-05",
+          "milestone": "M1",
+          "title": "Proteggere logout e cambio account",
+          "kind": "user-story",
+          "story": "Come utente voglio che dopo logout i miei dati non restino visibili sul dispositivo.",
+          "scope": [
+            "Purge cache SQLite e coda per account",
+            "Revoca/chiusura sessione e realtime",
+            "Gestione operazioni pendenti prima del logout"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Account B non vede cache di A",
+            "Retry precedenti non partono con identità nuova",
+            "Logout offline mostra la policy per operazioni non sincronizzate"
+          ],
+          "dependencies": [
+            "M1-04"
+          ],
+          "owner": "mobile",
+          "priority": "P1",
+          "estimate_days": 2
+        },
+        {
+          "id": "M1-06",
+          "milestone": "M1",
+          "title": "Creare nucleo e applicare autorizzazioni",
+          "kind": "user-story",
+          "story": "Come utente voglio creare un nucleo accessibile solo ai suoi membri.",
+          "scope": [
+            "Creazione household e owner",
+            "Guard membership per risorse",
+            "Schermata creazione essenziale"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Creatore diventa owner in transazione",
+            "ID di altro nucleo non concede lettura o scrittura",
+            "Creazione fallita non lascia membership orfane"
+          ],
+          "dependencies": [
+            "M1-03",
+            "M1-04"
+          ],
+          "owner": "backend",
+          "priority": "P0",
+          "estimate_days": 3
+        },
+        {
+          "id": "M1-07",
+          "milestone": "M1",
+          "title": "Gestire inviti tramite link e codice",
+          "kind": "user-story",
+          "story": "Come owner voglio invitare una persona perché collabori alla spesa.",
+          "scope": [
+            "Invito con scadenza e revoca",
+            "Accettazione autenticata",
+            "Interfaccia condivisione e ingresso"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Invito scaduto/revocato rifiutato",
+            "Retry accettazione non duplica membri",
+            "Link e codice portano allo stesso nucleo autorizzato"
+          ],
+          "dependencies": [
+            "M1-06"
+          ],
+          "owner": "backend",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M1-08",
+          "milestone": "M1",
+          "title": "Gestire uscita, rimozione e trasferimento owner",
+          "kind": "user-story",
+          "story": "Come owner voglio amministrare i membri senza lasciare il nucleo senza responsabile.",
+          "scope": [
+            "Trasferimento ownership atomico",
+            "Rimozione e uscita membri",
+            "Revoca accesso API e realtime con purge alla riconnessione"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Ultimo owner non può uscire senza policy esplicita",
+            "Due trasferimenti concorrenti mantengono un solo owner",
+            "Membro revocato non sincronizza e il client elimina dati al rilevamento della revoca"
+          ],
+          "dependencies": [
+            "M1-06",
+            "M1-07"
+          ],
+          "owner": "backend",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M1-09",
+          "milestone": "M1",
+          "title": "Creare e modificare liste condivise",
+          "kind": "user-story",
+          "story": "Come membro voglio più liste per organizzare spese diverse.",
+          "scope": [
+            "API e UI creazione/rinomina/eliminazione",
+            "Elenco liste attive",
+            "Data scadenza opzionale e messaggio dedicato"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Liste isolate per household",
+            "Scadenza non genera acquisti",
+            "Eliminazione confermata non lascia item accessibili"
+          ],
+          "dependencies": [
+            "M1-06"
+          ],
+          "owner": "mobile",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M1-10",
+          "milestone": "M1",
+          "title": "Archiviare e duplicare liste",
+          "kind": "user-story",
+          "story": "Come membro voglio riutilizzare una lista senza duplicare lo storico acquisti.",
+          "scope": [
+            "Archiviazione e filtro",
+            "Duplicazione con nuovi ID",
+            "Regole su item acquistati e scadenza copia"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Lista duplicata ha identità nuova",
+            "Duplicare o archiviare non produce purchase event",
+            "UI distingue attive, archiviate e scadute"
+          ],
+          "dependencies": [
+            "M1-09"
+          ],
+          "owner": "backend",
+          "priority": "P1",
+          "estimate_days": 2
+        },
+        {
+          "id": "M1-11",
+          "milestone": "M1",
+          "title": "Aggiungere e modificare articoli",
+          "kind": "user-story",
+          "story": "Come membro voglio aggiungere articoli con quantità e dettagli utili.",
+          "scope": [
+            "Nome, quantità, unità, note, categoria, priorità, assegnatario",
+            "Validazione API",
+            "Gestione prodotto già presente"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Doppio inserimento dello stesso prodotto segue regola esplicita",
+            "Unità incompatibili non sono sommate",
+            "Campi facoltativi non rallentano aggiunta minima"
+          ],
+          "dependencies": [
+            "M1-03",
+            "M1-09"
+          ],
+          "owner": "mobile",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M1-12",
+          "milestone": "M1",
+          "title": "Registrare check, completamento e annullamento acquisti",
+          "kind": "user-story",
+          "story": "Come membro voglio segnare e ripristinare acquisti senza alterare erroneamente lo storico.",
+          "scope": [
+            "Check con autore e timestamp",
+            "Completamento transazionale e non trovati",
+            "Undo con compensazione dello storico secondo contratto"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Retry completamento non duplica acquisti",
+            "Errore transazione non completa parzialmente la lista",
+            "Undo non lascia acquisti validi fittizi",
+            "Non trovati restano disponibili per la prossima lista"
+          ],
+          "dependencies": [
+            "M1-03",
+            "M1-11"
+          ],
+          "owner": "backend",
+          "priority": "P0",
+          "estimate_days": 3
+        },
+        {
+          "id": "M1-13",
+          "milestone": "M1",
+          "title": "Persistenza locale e coda offline",
+          "kind": "technical",
+          "story": "Come membro voglio aggiungere e spuntare senza rete anche dopo riavvio.",
+          "scope": [
+            "SQLite per viste e comandi",
+            "Operation ID persistenti e backoff",
+            "Protezione dati locali e migrazioni cache"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Riavvio conserva comandi pendenti",
+            "Stato ottimistico cambia prima della risposta server",
+            "Retry conserva operation ID",
+            "Policy cifratura locale del PRD è implementata o scostamento bloccante documentato"
+          ],
+          "dependencies": [
+            "M1-05",
+            "M1-11",
+            "M1-12"
+          ],
+          "owner": "mobile",
+          "priority": "P0",
+          "estimate_days": 3
+        },
+        {
+          "id": "M1-14",
+          "milestone": "M1",
+          "title": "Applicare comandi idempotenti e conflitti",
+          "kind": "technical",
+          "story": "Come membro voglio che retry e modifiche simultanee non perdano aggiornamenti.",
+          "scope": [
+            "Deduplica atomica per tenant e operation ID",
+            "Delta quantità e revisione attesa",
+            "Delete e tombstone con retention documentata"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Stesso comando applicato una sola volta",
+            "Stesso ID con payload diverso rifiutato",
+            "Delta concorrenti conservano entrambi i contributi",
+            "Comando obsoleto non resuscita un item eliminato"
+          ],
+          "dependencies": [
+            "M1-03",
+            "M1-12"
+          ],
+          "owner": "data-sync",
+          "priority": "P0",
+          "estimate_days": 3
+        },
+        {
+          "id": "M1-15",
+          "milestone": "M1",
+          "title": "Recuperare modifiche con cursore e snapshot",
+          "kind": "technical",
+          "story": "Come membro voglio recuperare tutte le modifiche dopo un periodo offline.",
+          "scope": [
+            "Change feed tenant con ordinamento coerente con commit",
+            "Paginazione stabile e cursore",
+            "Snapshot per cursore scaduto e replay della coda"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Commit fuori ordine di allocazione ID non perde eventi",
+            "Paginazione durante scritture non salta cambiamenti",
+            "Cursore scaduto attiva resync preservando intenti pendenti",
+            "Membership verificata ad ogni richiesta"
+          ],
+          "dependencies": [
+            "M1-14"
+          ],
+          "owner": "data-sync",
+          "priority": "P0",
+          "estimate_days": 3
+        },
+        {
+          "id": "M1-16",
+          "milestone": "M1",
+          "title": "Collegare sync e realtime nel client",
+          "kind": "user-story",
+          "story": "Come membro voglio vedere le modifiche dell’altra persona e lo stato di sincronizzazione.",
+          "scope": [
+            "Push coda e pull feed",
+            "Realtime come segnale più fallback",
+            "UI conflitti, pendenti e retry"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Disconnessione WebSocket non perde modifiche",
+            "Retry converge allo stato canonico",
+            "Revoca membership elimina cache e blocca invii",
+            "Snapshot non cancella silenziosamente operazioni locali"
+          ],
+          "dependencies": [
+            "M1-08",
+            "M1-13",
+            "M1-15"
+          ],
+          "owner": "mobile",
+          "priority": "P0",
+          "estimate_days": 3
+        },
+        {
+          "id": "M1-17",
+          "milestone": "M1",
+          "title": "Modalità spesa e aggiunta rapida da recenti locali",
+          "kind": "user-story",
+          "story": "Come persona al supermercato voglio leggere e spuntare con pochi tocchi.",
+          "scope": [
+            "Categorie e target grandi",
+            "Feedback aptico facoltativo",
+            "Recenti locali e misura tempi"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Screen reader annuncia stato check",
+            "Font ingranditi non nascondono azioni",
+            "Misurati add/check percepiti e mediana aggiunta recente su dispositivo reale"
+          ],
+          "dependencies": [
+            "M1-11",
+            "M1-16"
+          ],
+          "owner": "mobile",
+          "priority": "P1",
+          "estimate_days": 2
+        },
+        {
+          "id": "M1-18",
+          "milestone": "M1",
+          "title": "Verificare alpha e predisporre osservazione",
+          "kind": "validation",
+          "story": "Come product owner voglio evidenze affidabili prima di invitare nuclei alpha.",
+          "scope": [
+            "Matrice test due dispositivi/tenant/offline",
+            "Build alpha e protocollo osservazione",
+            "Report gate con blocchi e misure mancanti"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Test coprono delete, undo, retry e commit concorrenti",
+            "Nessun accesso cross-tenant nei casi previsti",
+            "Report riporta target 10–20 nuclei e attivazione 50% come non misurati se assenti",
+            "Rilascio richiede PR approvate e merge umano"
+          ],
+          "dependencies": [
+            "M1-01",
+            "M1-10",
+            "M1-16",
+            "M1-17"
+          ],
+          "owner": "quality",
+          "priority": "P0",
+          "estimate_days": 3
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "title": "Memoria domestica",
+      "objective": "Riutilizzare acquisti e proporre suggerimenti spiegabili.",
+      "release": "MVP 1.0",
+      "gate": "Con PR approvate e unite, misurare aggiunte/suggerimenti mostrati ≥25% e mai più/rifiuti ripetuti <10%; se dati insufficienti lasciare gate in attesa, se falsi positivi persistono ripianificare prima della dispensa.",
+      "tasks": [
+        {
+          "id": "M2-01",
+          "milestone": "M2",
+          "title": "Esporre storico e riaggiunta",
+          "kind": "user-story",
+          "story": "Come membro voglio ritrovare un acquisto e riaggiungerlo con un tap.",
+          "scope": [
+            "Query per prodotto/data",
+            "Paginazione e annullamenti",
+            "Riaggiunta idempotente"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Undo esclusi dallo storico valido",
+            "Riaggiunta non crea un acquisto",
+            "Dati separati per nucleo"
+          ],
+          "dependencies": [
+            "M1-18"
+          ],
+          "owner": "backend",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M2-02",
+          "milestone": "M2",
+          "title": "Normalizzare catalogo minimo e alias domestici",
+          "kind": "user-story",
+          "story": "Come membro voglio ritrovare lo stesso prodotto con nomi abituali.",
+          "scope": [
+            "Catalogo minimo",
+            "Alias per household",
+            "Normalizzazione controllata"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Alias di un nucleo non modifica altri nuclei",
+            "Collisioni ambigue richiedono scelta",
+            "Quantità con unità incompatibili restano distinte"
+          ],
+          "dependencies": [
+            "M2-01"
+          ],
+          "owner": "data-sync",
+          "priority": "P1",
+          "estimate_days": 2
+        },
+        {
+          "id": "M2-03",
+          "milestone": "M2",
+          "title": "Autocomplete di recenti e frequenti",
+          "kind": "user-story",
+          "story": "Come membro voglio aggiungere rapidamente prodotti abituali.",
+          "scope": [
+            "UI ricerca",
+            "Recenti/frequenti prima del catalogo",
+            "Fallback offline"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Ranking verificato con fixture",
+            "Nessun risultato cross-household",
+            "Selezione riusa ID prodotto",
+            "Misura mediana aggiunta recente documentata"
+          ],
+          "dependencies": [
+            "M2-02"
+          ],
+          "owner": "mobile",
+          "priority": "P1",
+          "estimate_days": 2
+        },
+        {
+          "id": "M2-04",
+          "milestone": "M2",
+          "title": "Calcolare frequenza e confidenza",
+          "kind": "technical",
+          "story": "Come utente voglio suggerimenti fondati su acquisti sufficienti.",
+          "scope": [
+            "Intervalli per occasioni distinte",
+            "Mediana e regolarità",
+            "Ricalcolo dopo undo"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Meno di tre occasioni non genera suggerimento di frequenza",
+            "Item della stessa lista non contano come occasioni indipendenti",
+            "Undo invalida i segnali derivati"
+          ],
+          "dependencies": [
+            "M2-01"
+          ],
+          "owner": "data-sync",
+          "priority": "P1",
+          "estimate_days": 2
+        },
+        {
+          "id": "M2-05",
+          "milestone": "M2",
+          "title": "Generare suggerimenti spiegabili",
+          "kind": "user-story",
+          "story": "Come membro voglio sapere cosa potrebbe mancare e perché.",
+          "scope": [
+            "Job batch ripetibile",
+            "Score deterministico e motivazione",
+            "Massimo 5–8 candidati"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Stesso input produce stesso ranking",
+            "Ogni suggerimento ha motivazione coerente",
+            "Nessun item aggiunto senza consenso",
+            "Retry job non duplica suggerimenti"
+          ],
+          "dependencies": [
+            "M2-04"
+          ],
+          "owner": "backend",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M2-06",
+          "milestone": "M2",
+          "title": "Gestire aggiungi, ignora, rimanda e mai più",
+          "kind": "user-story",
+          "story": "Come membro voglio controllare i suggerimenti in base ai miei bisogni.",
+          "scope": [
+            "Azioni singole e batch",
+            "Snooze e suppression persistenti",
+            "Decisione idempotente API"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Mai più resiste al job successivo",
+            "Snooze non riappare prima della scadenza",
+            "Retry aggiungi non duplica item",
+            "Ignora influenza i suggerimenti successivi"
+          ],
+          "dependencies": [
+            "M2-05"
+          ],
+          "owner": "mobile",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M2-07",
+          "milestone": "M2",
+          "title": "Misurare qualità dei suggerimenti",
+          "kind": "technical",
+          "story": "Come PM voglio misurare precisione percepita con denominatori chiari.",
+          "scope": [
+            "Eventi shown/add/suppress",
+            "Deduplica esposizioni",
+            "Report aggregato per coorte"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Riapertura schermata non gonfia esposizioni definite",
+            "Numeratori e denominatori ricostruibili",
+            "Report non contiene nomi prodotti o dati personali non necessari"
+          ],
+          "dependencies": [
+            "M2-06"
+          ],
+          "owner": "data-sync",
+          "priority": "P1",
+          "estimate_days": 2
+        },
+        {
+          "id": "M2-08",
+          "milestone": "M2",
+          "title": "Verificare MVP e decisione sul gate",
+          "kind": "validation",
+          "story": "Come product owner voglio decidere sulla base di risultati reali.",
+          "scope": [
+            "Casi limite frequenza/undo/feedback",
+            "Protocollo osservazione",
+            "Report soglie e fallback reminder"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Fixture verificano meno di tre occasioni e acquisti irregolari",
+            "Report distingue dati reali e simulati",
+            "Esito riporta pass/fail/in attesa e PR collegate"
+          ],
+          "dependencies": [
+            "M2-03",
+            "M2-07"
+          ],
+          "owner": "quality",
+          "priority": "P1",
+          "estimate_days": 2
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "title": "Affidabilità beta",
+      "objective": "Supportare uso continuativo, gestione dati e operazioni.",
+      "release": "Beta",
+      "gate": "PR approvate e unite; beta privata 100–300 nuclei prima della pubblica; W4 ≥25%, due membri attivi ≥60% e uso 3 settimane su 4 ≥30%, con finestre e coorti esplicite.",
+      "tasks": [
+        {
+          "id": "M3-01",
+          "milestone": "M3",
+          "title": "Preferenze notifiche e quiet hours",
+          "kind": "user-story",
+          "story": "Come membro voglio controllare quando ricevere notifiche.",
+          "scope": [
+            "Opt-in dispositivo",
+            "Preferenze granulari",
+            "Timezone e quiet hours"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Negare permesso lascia app funzionante",
+            "Ora legale e timezone rispettate",
+            "Disattivazione sincronizzata"
+          ],
+          "dependencies": [
+            "M2-08"
+          ],
+          "owner": "mobile",
+          "priority": "P1",
+          "estimate_days": 2
+        },
+        {
+          "id": "M3-02",
+          "milestone": "M3",
+          "title": "Inviare notifiche affidabili e neutre",
+          "kind": "user-story",
+          "story": "Come membro voglio ricevere avvisi pertinenti senza duplicati.",
+          "scope": [
+            "Inviti, modifiche rilevanti e reminder",
+            "Job retry deduplicati",
+            "Revoca device token"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Retry non duplica invii applicativi",
+            "Utente rimosso non riceve nuove notifiche",
+            "Lock screen non espone contenuti sensibili",
+            "Preferenze e quiet hours rispettate"
+          ],
+          "dependencies": [
+            "M3-01"
+          ],
+          "owner": "backend",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M3-03",
+          "milestone": "M3",
+          "title": "Esportare dati dell’account",
+          "kind": "user-story",
+          "story": "Come utente voglio ottenere i dati che mi riguardano.",
+          "scope": [
+            "Richiesta autenticata",
+            "Export con schema documentato",
+            "Download a scadenza"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Export esclude dati non autorizzati di altri utenti",
+            "Download richiede autorizzazione",
+            "Scadenza impedisce riuso link"
+          ],
+          "dependencies": [
+            "M2-08"
+          ],
+          "owner": "backend",
+          "priority": "P1",
+          "estimate_days": 2
+        },
+        {
+          "id": "M3-04",
+          "milestone": "M3",
+          "title": "Cancellare account e applicare retention",
+          "kind": "user-story",
+          "story": "Come utente voglio cancellare account e dati con conseguenze chiare per il nucleo.",
+          "scope": [
+            "Workflow cancellazione idempotente",
+            "Policy owner e dati condivisi",
+            "Purge provider/cache e retention backup"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Retry riprende senza duplicare side effect",
+            "Ultimo owner segue policy esplicita",
+            "Restore backup riapplica cancellazioni",
+            "Criteri su dati mantenuti/anonimizzati documentati"
+          ],
+          "dependencies": [
+            "M3-03",
+            "M1-08"
+          ],
+          "owner": "backend",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M3-05",
+          "milestone": "M3",
+          "title": "Osservabilità, feature flag e gestione abusi minima",
+          "kind": "technical",
+          "story": "Come operatore voglio diagnosticare problemi e disattivare funzioni difettose.",
+          "scope": [
+            "Error tracking con redazione",
+            "Metriche API/job/conflitti",
+            "Flag server e rate limit"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Errori correlabili senza token o contenuti spesa",
+            "Flag disattiva funzione anche sul server",
+            "Rate limit verificato con richieste eccessive"
+          ],
+          "dependencies": [
+            "M2-08"
+          ],
+          "owner": "orchestrator",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M3-06",
+          "milestone": "M3",
+          "title": "Backup e prova di ripristino",
+          "kind": "technical",
+          "story": "Come operatore voglio recuperare i dati dopo un guasto.",
+          "scope": [
+            "Backup cifrati e retention",
+            "Runbook restore ambiente isolato",
+            "Misura tempi e perdita massima"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Restore produce dati coerenti",
+            "Segreti e accessi limitati documentati",
+            "RTO/RPO misurati e confrontati con obiettivi scelti"
+          ],
+          "dependencies": [
+            "M3-04"
+          ],
+          "owner": "data-sync",
+          "priority": "P1",
+          "estimate_days": 2
+        },
+        {
+          "id": "M3-07",
+          "milestone": "M3",
+          "title": "Migliorare onboarding e accessibilità",
+          "kind": "user-story",
+          "story": "Come nuovo membro voglio capire subito come collaborare.",
+          "scope": [
+            "Onboarding con primo nucleo/lista",
+            "Audit screen reader e font",
+            "Date/unità localizzate e ordine categorie household"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Onboarding completabile con screen reader",
+            "Riapertura non ripete onboarding concluso",
+            "Ordine categorie persiste per nucleo",
+            "Italiano non forza formati errati delle unità"
+          ],
+          "dependencies": [
+            "M2-03"
+          ],
+          "owner": "mobile",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M3-08",
+          "milestone": "M3",
+          "title": "Predisporre report retention e gate beta",
+          "kind": "validation",
+          "story": "Come product owner voglio distinguere attivazione da uso continuativo.",
+          "scope": [
+            "Coorti W4 e uso settimanale",
+            "Protocollo beta privata e supporto",
+            "Decisione beta pubblica documentata"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Definizione attivo e denominatori versionata",
+            "Campione 100–300 nuclei indicato come target finché non osservato",
+            "PR, incidenti e blocchi collegati",
+            "Soglie non misurate non sono dichiarate superate"
+          ],
+          "dependencies": [
+            "M3-02",
+            "M3-05",
+            "M3-06",
+            "M3-07"
+          ],
+          "owner": "pm",
+          "priority": "P1",
+          "estimate_days": 2
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "title": "Dispensa probabilistica",
+      "objective": "Mostrare scorte utili mantenendo evidente l’incertezza.",
+      "release": "V1",
+      "gate": "PR approvate e unite; confronto utilizzo, correzioni e carico percepito con baseline beta. Soglie concordate prima dell’esperimento; nessuna data inferita presentata come scadenza verificata.",
+      "tasks": [
+        {
+          "id": "M4-01",
+          "milestone": "M4",
+          "title": "Definire modello stock stimato e verificato",
+          "kind": "technical",
+          "story": "Come membro voglio distinguere stime e quantità confermate.",
+          "scope": [
+            "Schema separato e provenienza",
+            "Migrazione",
+            "Contratti correzione e confidenza"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Dato stimato non sovrascrive conferma senza regola esplicita",
+            "Provenienza ricostruibile",
+            "Unità incompatibili non aggregate"
+          ],
+          "dependencies": [
+            "M3-08"
+          ],
+          "owner": "data-sync",
+          "priority": "P1",
+          "estimate_days": 2
+        },
+        {
+          "id": "M4-02",
+          "milestone": "M4",
+          "title": "Calcolare stati di dispensa",
+          "kind": "user-story",
+          "story": "Come membro voglio sapere cosa potrebbe essere in esaurimento.",
+          "scope": [
+            "Regole su acquisti e frequenze",
+            "Confidenza",
+            "Ricalcolo idempotente"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Presenti/in esaurimento/da verificare riproducibili",
+            "Pochi dati mostrano incertezza",
+            "Undo acquisto ricalcola stato"
+          ],
+          "dependencies": [
+            "M4-01",
+            "M2-04"
+          ],
+          "owner": "backend",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M4-03",
+          "milestone": "M4",
+          "title": "Visualizzare e correggere rapidamente scorte",
+          "kind": "user-story",
+          "story": "Come membro voglio confermare o correggere una stima con poco lavoro.",
+          "scope": [
+            "Lista dispensa",
+            "Correzione presente/esaurito",
+            "Gestione conflitto correzioni"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Etichetta stimata sempre visibile",
+            "Correzione offline sincronizzata",
+            "Conflitto non cancella silenziosamente conferma recente"
+          ],
+          "dependencies": [
+            "M4-02"
+          ],
+          "owner": "mobile",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M4-04",
+          "milestone": "M4",
+          "title": "Gestire prodotti sempre in casa",
+          "kind": "user-story",
+          "story": "Come membro voglio indicare prodotti importanti per il nucleo.",
+          "scope": [
+            "Flag household facoltativo",
+            "Filtro dispensa",
+            "Integrazione scoring"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Flag non crea acquisti o scorte reali",
+            "Mai più mantiene precedenza esplicita",
+            "Modifica condivisa tra membri"
+          ],
+          "dependencies": [
+            "M4-03",
+            "M2-06"
+          ],
+          "owner": "mobile",
+          "priority": "P1",
+          "estimate_days": 2
+        },
+        {
+          "id": "M4-05",
+          "milestone": "M4",
+          "title": "Gestire quantità e lotti verificati",
+          "kind": "user-story",
+          "story": "Come membro voglio registrare quantità e lotti solo quando li conosco.",
+          "scope": [
+            "Lotti confermati",
+            "Quantità e luogo facoltativi",
+            "Consumo/correzione con revisioni"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Nessun lotto obbligatorio per usare app",
+            "Consumo concorrente non produce quantità negative",
+            "Provenienza manuale conservata"
+          ],
+          "dependencies": [
+            "M4-01"
+          ],
+          "owner": "backend",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M4-06",
+          "milestone": "M4",
+          "title": "Inserire date e promemoria verificati",
+          "kind": "user-story",
+          "story": "Come membro voglio promemoria su date realmente lette sulla confezione.",
+          "scope": [
+            "Date use-by/best-before distinte",
+            "UI conferma",
+            "Reminder tramite notifiche esistenti"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Tipo data obbligatorio con data",
+            "Testi distinguono le due date",
+            "Nessuna rassicurazione automatica commestibilità",
+            "Spostamento data aggiorna reminder senza duplicati"
+          ],
+          "dependencies": [
+            "M4-05",
+            "M3-02"
+          ],
+          "owner": "mobile",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M4-07",
+          "milestone": "M4",
+          "title": "Valutare beneficio della dispensa",
+          "kind": "validation",
+          "story": "Come PM voglio capire se le correzioni richiedono troppo lavoro.",
+          "scope": [
+            "Misure utilizzo e correzioni",
+            "Protocollo confronto baseline",
+            "Gate semplificazione"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Report separa correlazione da causalità",
+            "Soglie definite prima dell’osservazione",
+            "Risultati mancanti marcati in attesa",
+            "Verificati flussi senza inventario manuale"
+          ],
+          "dependencies": [
+            "M4-04",
+            "M4-06"
+          ],
+          "owner": "quality",
+          "priority": "P1",
+          "estimate_days": 2
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "title": "Acquisizione semiautomatica",
+      "objective": "Ridurre inserimento con barcode e scontrini revisionabili.",
+      "release": "V2",
+      "gate": "PR approvate e unite; campione reale dimostra tempo netto risparmiato dopo revisione; OCR resta disattivato se beneficio non dimostrato. Integrazioni retailer richiedono accesso legittimo e caso misurabile.",
+      "tasks": [
+        {
+          "id": "M5-01",
+          "milestone": "M5",
+          "title": "Scansionare barcode e gestire mancati risultati",
+          "kind": "user-story",
+          "story": "Come membro voglio riconoscere un prodotto tramite confezione.",
+          "scope": [
+            "Camera e permessi",
+            "Lettura barcode",
+            "Fallback manuale"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Permesso negato mantiene inserimento manuale",
+            "Scansione ripetuta non duplica item",
+            "Codice sconosciuto propone compilazione"
+          ],
+          "dependencies": [
+            "M4-07"
+          ],
+          "owner": "mobile",
+          "priority": "P1",
+          "estimate_days": 2
+        },
+        {
+          "id": "M5-02",
+          "milestone": "M5",
+          "title": "Risolvere barcode e matching household",
+          "kind": "user-story",
+          "story": "Come membro voglio confermare il prodotto trovato prima di salvarlo.",
+          "scope": [
+            "Provider catalogo verificato e sostituibile",
+            "Matching alias household",
+            "Cache e provenienza"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Match ambiguo richiede conferma",
+            "Timeout provider non blocca lista",
+            "Licenza, limiti e provenienza fonte documentati"
+          ],
+          "dependencies": [
+            "M5-01",
+            "M2-02"
+          ],
+          "owner": "backend",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M5-03",
+          "milestone": "M5",
+          "title": "Acquisire scontrini con retention limitata",
+          "kind": "user-story",
+          "story": "Come membro voglio caricare uno scontrino per prepararne l’importazione.",
+          "scope": [
+            "Camera/upload",
+            "Storage protetto e limiti",
+            "Eliminazione originale"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Altro nucleo non accede al file",
+            "Formato/dimensione invalidi rifiutati",
+            "Retention e cancellazione verificabili"
+          ],
+          "dependencies": [
+            "M5-02",
+            "M3-04"
+          ],
+          "owner": "mobile",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M5-04",
+          "milestone": "M5",
+          "title": "Estrarre righe OCR in bozza",
+          "kind": "user-story",
+          "story": "Come membro voglio una bozza correggibile dei miei acquisti.",
+          "scope": [
+            "Adapter OCR",
+            "Parsing e confidenza",
+            "Job retry e stato errore"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "OCR non crea direttamente acquisti",
+            "Retry non crea bozze duplicate",
+            "Righe illeggibili marcate incerte",
+            "Fallimento lascia alternativa manuale"
+          ],
+          "dependencies": [
+            "M5-03"
+          ],
+          "owner": "backend",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M5-05",
+          "milestone": "M5",
+          "title": "Revisionare righe e matching dello scontrino",
+          "kind": "user-story",
+          "story": "Come membro voglio correggere errori prima di importare.",
+          "scope": [
+            "Modifica quantità, nomi e match",
+            "Conferma esplicita",
+            "Scarto righe"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Ogni riga incerta richiede verifica",
+            "Utente può annullare senza acquisti",
+            "Prezzi e quantità non vengono confusi"
+          ],
+          "dependencies": [
+            "M5-04"
+          ],
+          "owner": "mobile",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M5-06",
+          "milestone": "M5",
+          "title": "Confermare importazione senza duplicare acquisti",
+          "kind": "technical",
+          "story": "Come membro voglio evitare che lo stesso scontrino conti due volte.",
+          "scope": [
+            "Commit atomico conferma",
+            "Deduplica import",
+            "Conciliazione con lista già completata"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Retry conferma crea una sola importazione",
+            "Acquisti già da lista non duplicati senza scelta esplicita",
+            "Undo import invalida segnali derivati"
+          ],
+          "dependencies": [
+            "M5-05",
+            "M4-02"
+          ],
+          "owner": "data-sync",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M5-07",
+          "milestone": "M5",
+          "title": "Misurare risparmio e valutare integrazioni retailer",
+          "kind": "validation",
+          "story": "Come product owner voglio investire solo in acquisizioni che fanno risparmiare tempo.",
+          "scope": [
+            "Protocollo campione reale e correzioni",
+            "Confronto inserimento manuale",
+            "Studio accesso retailer senza integrazione produttiva"
+          ],
+          "out_of_scope": [
+            "Checkout o scraping retailer",
+            "Rilascio OCR senza evidenza"
+          ],
+          "acceptance": [
+            "Misura include tempo di revisione",
+            "Accuracy documentata per righe e quantità",
+            "Decisione OCR go/no-go con dati o in attesa",
+            "Retailer resta rinviato se accesso non affidabile"
+          ],
+          "dependencies": [
+            "M5-06"
+          ],
+          "owner": "pm",
+          "priority": "P1",
+          "estimate_days": 2
+        }
+      ]
+    },
+    {
+      "id": "M6",
+      "title": "Benessere e monetizzazione",
+      "objective": "Offrire personalizzazione facoltativa e premium validato.",
+      "release": "V3",
+      "gate": "PR approvate e unite; retention W8 e domanda premium documentate prima del billing; revisione privacy/sicurezza alimentare/store completata prima del rilascio. Prezzi e soglie economiche sono decisioni da validare, non assunzioni operative.",
+      "tasks": [
+        {
+          "id": "M6-01",
+          "milestone": "M6",
+          "title": "Validare domanda premium e perimetro V3",
+          "kind": "validation",
+          "story": "Come product owner voglio confermare il valore pagabile prima di sviluppare billing.",
+          "scope": [
+            "Protocollo interesse/prezzo",
+            "Definizione Free e Plus per nucleo",
+            "Decisione su budget, insight e luoghi multipli"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Lista condivisa base resta gratuita",
+            "W8 e richiesta feature documentate o gate in attesa",
+            "Funzioni premium scelte hanno criteri di accettazione",
+            "Nessun prezzo ipotetico comunicato come definitivo"
+          ],
+          "dependencies": [
+            "M5-07",
+            "M3-08"
+          ],
+          "owner": "pm",
+          "priority": "P1",
+          "estimate_days": 2
+        },
+        {
+          "id": "M6-02",
+          "milestone": "M6",
+          "title": "Definire privacy e consensi separati V3",
+          "kind": "technical",
+          "story": "Come utente voglio scegliere quali preferenze condividere e per quale finalità.",
+          "scope": [
+            "Mappa dati sensibili e finalità",
+            "Consenso revocabile e audit minimo",
+            "Revisione requisiti con esperto"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Opt-out non blocca lista di base",
+            "Revoca interrompe personalizzazione",
+            "Consenso personale non ereditato dal nucleo",
+            "Revisione professionale resta bloccante se non disponibile"
+          ],
+          "dependencies": [
+            "M6-01",
+            "M3-04"
+          ],
+          "owner": "backend",
+          "priority": "P1",
+          "estimate_days": 2
+        },
+        {
+          "id": "M6-03",
+          "milestone": "M6",
+          "title": "Gestire preferenze e obiettivi facoltativi",
+          "kind": "user-story",
+          "story": "Come utente voglio impostare obiettivi alimentari senza compilare un diario.",
+          "scope": [
+            "UI opt-in",
+            "Visibilità privata/condivisione esplicita",
+            "Modifica ed eliminazione"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Default non raccoglie dati sensibili",
+            "Altri membri non vedono profilo privato",
+            "Eliminazione rimuove uso nei suggerimenti",
+            "Nessuna diagnosi o dieta terapeutica"
+          ],
+          "dependencies": [
+            "M6-02"
+          ],
+          "owner": "mobile",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M6-04",
+          "milestone": "M6",
+          "title": "Suggerire ricette dalla dispensa",
+          "kind": "user-story",
+          "story": "Come membro voglio idee per usare ingredienti disponibili.",
+          "scope": [
+            "Fonte ricette autorizzata",
+            "Matching con stock incerto esplicito",
+            "Aggiunta ingredienti mancanti con consenso"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Ricetta riporta fonte e ingredienti",
+            "Stock stimato non garantisce disponibilità",
+            "Nessuna garanzia su allergeni o sicurezza",
+            "Preferenze applicate solo con consenso valido"
+          ],
+          "dependencies": [
+            "M6-03",
+            "M4-03"
+          ],
+          "owner": "backend",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M6-05",
+          "milestone": "M6",
+          "title": "Mostrare composizione spesa e obiettivi scelti",
+          "kind": "user-story",
+          "story": "Come utente voglio capire come la spesa si collega ai miei obiettivi.",
+          "scope": [
+            "Riepilogo descrittivo da dati disponibili",
+            "Qualità/copertura dati",
+            "Disattivazione semplice"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Dati mancanti dichiarati",
+            "Nessun punteggio colpevolizzante o indicazione clinica",
+            "Opt-out elimina visualizzazione personalizzata"
+          ],
+          "dependencies": [
+            "M6-03"
+          ],
+          "owner": "mobile",
+          "priority": "P1",
+          "estimate_days": 2
+        },
+        {
+          "id": "M6-06",
+          "milestone": "M6",
+          "title": "Definire contratti subscription e policy household",
+          "kind": "technical",
+          "story": "Come owner voglio comprendere chi paga e chi riceve Plus.",
+          "scope": [
+            "Decisione provider e regole store correnti",
+            "Entitlement per nucleo",
+            "Policy trasferimento owner e rinnovo"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Decisione documenta store, costi e gestione acquisto",
+            "Cambio owner non duplica diritto o addebito",
+            "Scadenza mantiene accesso ai dati di base"
+          ],
+          "dependencies": [
+            "M6-01"
+          ],
+          "owner": "backend",
+          "priority": "P1",
+          "estimate_days": 2
+        },
+        {
+          "id": "M6-07",
+          "milestone": "M6",
+          "title": "Implementare entitlement e webhook billing",
+          "kind": "user-story",
+          "story": "Come nucleo pagante voglio un accesso Plus coerente con lo stato dell’abbonamento.",
+          "scope": [
+            "Verifica server ricevute/eventi",
+            "Idempotenza e ordine webhook",
+            "Rimborso, grace e scadenza"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Webhook falsificato rifiutato",
+            "Eventi duplicati/fuori ordine non riattivano erroneamente Plus",
+            "Test sandbox coprono rinnovo/rimborso",
+            "Autorizzazione premium verificata server-side"
+          ],
+          "dependencies": [
+            "M6-06"
+          ],
+          "owner": "backend",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M6-08",
+          "milestone": "M6",
+          "title": "Acquisto, ripristino e gestione piano nel client",
+          "kind": "user-story",
+          "story": "Come owner voglio acquistare e gestire Plus con condizioni trasparenti.",
+          "scope": [
+            "UI prezzo/periodo dal provider",
+            "Acquisto sandbox e restore",
+            "Link gestione/cancellazione"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Acquisto annullato lascia Free",
+            "Restore riallinea entitlement verificato",
+            "Prezzo e rinnovo visibili prima dell’acquisto",
+            "Membro non owner segue policy definita"
+          ],
+          "dependencies": [
+            "M6-07"
+          ],
+          "owner": "mobile",
+          "priority": "P1",
+          "estimate_days": 3
+        },
+        {
+          "id": "M6-09",
+          "milestone": "M6",
+          "title": "Verificare rilascio V3 e sostenibilità",
+          "kind": "validation",
+          "story": "Come product owner voglio rilasciare V3 con limiti e comportamento verificati.",
+          "scope": [
+            "Test consensi, ricette e subscription",
+            "Checklist store e revisione specialistica",
+            "Report costi/retention e gate finale"
+          ],
+          "out_of_scope": [
+            "Funzioni delle milestone successive"
+          ],
+          "acceptance": [
+            "Revoca consenso e rimborsi verificati end-to-end",
+            "Evidenze revisioni specialistiche collegate o rilascio bloccato",
+            "Gate economico definito dal PM confrontato con dati reali",
+            "Ogni task implementato ha PR approvata e unita"
+          ],
+          "dependencies": [
+            "M6-04",
+            "M6-05",
+            "M6-08"
+          ],
+          "owner": "quality",
+          "priority": "P1",
+          "estimate_days": 3
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+name: PM backlog
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'agents/backlog/**'
+      - 'agents/scripts/pm_sync.py'
+      - '.github/workflows/pm-backlog.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: listaviva-pm-backlog
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    # Bootstrap was explicitly requested by the repository owner. Never run on forks.
+    if: >-
+      github.repository == 'tetosever/ListaViva' &&
+      github.actor == 'tetosever' &&
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event.pull_request.head.repo.full_name == github.repository &&
+        github.event.pull_request.head.ref == 'chore/multi-agent-setup'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 agents/scripts/validate.py
+      - run: python3 -m unittest discover -s agents/tests -v
+      - name: Publish milestones and task issues
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 agents/scripts/pm_sync.py --apply
+      - name: Summarize tracking
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 agents/scripts/pm_sync.py --status >> "$GITHUB_STEP_SUMMARY"
